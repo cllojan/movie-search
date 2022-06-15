@@ -1,20 +1,23 @@
-//TMDB 
 
+const form = document.getElementById('form');
+const search = document.getElementById('search');
+const tagsEl = document.getElementById('tags');
+const btn_search = document.getElementById('btn-search');
 let pagina = 1;
 let peliculas = '';
 let ultimaPelicula
 
-//const API_KEY = 'api_key=8158b68c05e07d0b7f97b3a39457fc5a';
-
+const API_KEY = 'api_key=8158b68c05e07d0b7f97b3a39457fc5a';
+const URL = `https://api.themoviedb.org/3/discover/movie?api_key=8158b68c05e07d0b7f97b3a39457fc5a&page=${pagina}`;
 const IMG_URL = '';
-//const searchURL = BASE_URL + '/search/movie?' + API_KEY;
+const searchURL = `https://api.themoviedb.org/3/search/movie?${API_KEY}`;
 
 //observador
 let observador = new IntersectionObserver((entradas) => {
   entradas.forEach(entrada => {
     if (entrada.isIntersecting) {
-      pagina+=1;
-      getMovies();
+      pagina += 1;
+      getMovies(`https://api.themoviedb.org/3/discover/movie?api_key=8158b68c05e07d0b7f97b3a39457fc5a&page=${pagina}`)
     }
   })
 }, {
@@ -101,11 +104,7 @@ const genres = [
 ]
 
 
-const form = document.getElementById('form');
-const search = document.getElementById('search');
-const tagsEl = document.getElementById('tags');
-
-
+/*
 var selectedGenre = []
 setGenre();
 function setGenre() {
@@ -171,18 +170,18 @@ function clearBtn() {
   }
 
 }
-
-const getMovies = async () => {
+*/
+const getMovies = async (url) => {
   try {
-    const respuesta = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=8158b68c05e07d0b7f97b3a39457fc5a&page=${pagina}`);
+    const respuesta = await fetch(url);
     if (respuesta.status === 200) {
       const datos = await respuesta.json();
-      
+
       datos.results.forEach(pelicula => {
         console.log(pelicula);
         peliculas += `
               <div class="movie">
-                <img src="${pelicula.poster_path ? `https://image.tmdb.org/t/p/w500${pelicula.poster_path}`: "http://via.placeholder.com/1080x1580"}" alt="${pelicula.title}">
+                <img src="${pelicula.poster_path ? `https://image.tmdb.org/t/p/w500${pelicula.poster_path}` : "http://via.placeholder.com/1080x1580"}" alt="${pelicula.title}">
                 <div class="overview">
                     ${pelicula.title}
                     
@@ -190,7 +189,7 @@ const getMovies = async () => {
             </div>
           `;
       })
-      document.getElementById("contenedor").innerHTML=peliculas;
+      document.getElementById("contenedor").innerHTML = peliculas;
       const peliculasEnPantalla = document.querySelectorAll('.contenedor .movie')
       ultimaPelicula = peliculasEnPantalla[peliculasEnPantalla.length - 1];
       observador.observe(ultimaPelicula);
@@ -208,22 +207,29 @@ const getMovies = async () => {
 }
 
 
-getMovies();
-/*
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
+getMovies(URL);
+
+search.addEventListener('keypress', function (e) {
 
   const searchTerm = search.value;
-  selectedGenre = [];
-  setGenre();
+   
+  peliculas = "";
+  getMovies(`https://api.themoviedb.org/3/search/movie?api_key=8158b68c05e07d0b7f97b3a39457fc5a&query=${searchTerm}`)
+  /*selectedGenre = [];
+  //setGenre();
   if (searchTerm) {
-    getMovies(searchURL + '&query=' + searchTerm)
+    
   } else {
-    getMovies(API_URL);
-  }
-
+    getMovies(URL);
+  }*/
 })
-
+search.addEventListener('keydown', function (e) {
+  const searchTerm = search.value;
+  if (searchTerm.length == 0) {
+    getMovies(URL);
+  }
+})
+/*
 
 
 function pageCall(page) {
