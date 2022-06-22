@@ -1,6 +1,7 @@
 {
   "name": "movie-search",
   "private": true,
+  "type":"module",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
@@ -11,6 +12,8 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
-    "twilio": "^3.77.3"
+    "twilio": "^3.77.3",
+    "util": "^0.12.4",
+    "util.inherits": "^1.0.3"
   }
 }
