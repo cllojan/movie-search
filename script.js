@@ -1,4 +1,4 @@
-import twilio  from "twilio";
+
 const form = document.getElementById("form");
 const search = document.getElementById("search");
 const tagsEl = document.getElementById("tags");
